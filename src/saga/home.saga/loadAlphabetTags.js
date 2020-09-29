@@ -32,6 +32,5 @@ function* loadAlphabetTags(action) {
 }
 
 export default function* watchLoadAlphabetTags() {
-  console.log("watch 불림");
   yield takeLatest(ALPHABET_TAGS_LOAD_REQUEST, loadAlphabetTags);
 }

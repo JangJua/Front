@@ -76,16 +76,13 @@ const PostReducer = (state = initialState, action) => immer(state, (draft) => {
       break;
     }
     case NOTICE_LOAD_REQUEST: {
-      draft.showPostFallback = false;
       break;
     }
     case NOTICE_LOAD_SUCCESS: {
-      draft.notices.push(...action.data);
-      draft.showPostFallback = true;
+      draft.notices = action.data;
       break;
     }
     case NOTICE_LOAD_FAILURE: {
-      draft.showPostFallback = false;
       break;
     }
     case POPULAR_TAGS_LOAD_REQUEST: {

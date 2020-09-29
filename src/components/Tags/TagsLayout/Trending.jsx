@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { POPULAR_TAGS_LOAD_REQUEST } from "store/actions/postAction";
@@ -28,8 +29,8 @@ const Trending = () => {
   return (
     <>
       <S.StyledTagSection>
-        {popularTags.map((Tag, index) => (
-          <TagItem Tag={Tag} key={index} />
+        {popularTags.map((Tag, id) => (
+          <TagItem Tag={Tag} key={id} />
         ))}
       </S.StyledTagSection>
       {showTagsFallback || <TagsFallBackLayout />}

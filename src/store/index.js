@@ -11,6 +11,9 @@ import modal from "store/reducers/modalReducer";
 import readingList from "store/reducers/readingListReducer";
 import write from "store/reducers/writeReducer";
 import save from "store/reducers/saveReducer";
+import searchReducer from "store/reducers/searchReducer";
+import settingReducer from "store/reducers/settingReducer";
+
 import series from "store/reducers/seriesReducer";
 
 const createRootReducer = (history) =>
@@ -26,6 +29,8 @@ const createRootReducer = (history) =>
     write,
     save,
     series,
+    searchReducer,
+    settingReducer,
   });
 
 export default createRootReducer;

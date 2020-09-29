@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+/* eslint-disable react/no-array-index-key */
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { LOAD_POST_DETAIL_REQUEST } from "store/actions/postDetailAction";
@@ -26,14 +27,10 @@ const PostSeries = () => {
   const setId = (n) => {
     id.current = n;
   };
+
   useEffect(() => {
-    if (seriesList !== undefined) {
-      for (let i = 0; i < seriesList.posts.length; i++) {
-        if (seriesList.posts[i].title === postTitle) {
-          setId(i);
-          console.log(id);
-        }
-      }
+    if (seriesList) {
+      setId(seriesList.posts.findIndex((post) => post.title === postTitle));
     }
   }, [seriesList]);
   // 시리즈에서 현재 포스트를 볼드체와 초록색으로 표시해주는 역할을 하는 active
@@ -51,11 +48,11 @@ const PostSeries = () => {
           <S.StyledIoIosBookmark />
           {!hidden && (
             <S.SeriesList>
-              {seriesList.posts.map((series, id) => (
+              {seriesList.posts.map((series, index) => (
                 <SeriesItem
                   url={series.url.substring(21)}
                   title={series.title}
-                  key={id}
+                  key={index}
                   active={series.title === postTitle}
                 />
               ))}

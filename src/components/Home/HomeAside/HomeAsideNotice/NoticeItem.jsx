@@ -1,5 +1,7 @@
+/* eslint-disable camelcase */
 import React, { memo } from "react";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 import * as S from "./style";
 
 const NoticeItem = ({ notice, className }) => {
@@ -14,4 +16,17 @@ const NoticeItem = ({ notice, className }) => {
     </li>
   );
 };
+
+NoticeItem.propTypes = {
+  notice: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    updated_at: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
+  }).isRequired,
+  className: PropTypes.string,
+};
+NoticeItem.defaultProps = {
+  className: null,
+};
+
 export default memo(NoticeItem);

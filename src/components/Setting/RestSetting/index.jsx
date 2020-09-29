@@ -1,57 +1,92 @@
-import React, { useState, useCallback } from "react";
+/* eslint-disable no-nested-ternary */
+import React, { useState, useCallback, useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import * as S from "./style";
 import SocialInfo from "./SocialInfoInput";
 import SocialInfoList from "./SocialInfoList";
 import SquareButton from "../../Common/SquareButton";
 import UnderlineButton from "../../Common/UnderlineButton";
+import {
+  loadUserSettingRequest,
+  submitNotifySettingRequest,
+  submitSocialSettingRequest,
+  submitTitleSettingRequest,
+} from "../../../store/actions/settingAction";
 
 const RestSetting = () => {
+  const dispatch = useDispatch();
   const [titleSaved, setTitleSaved] = useState(true);
   const [socialInfoSaved, setSocialInfoSaved] = useState(true);
-  const sampleData = {
-    velogTitle: "example.log",
-    socialInfo: {
-      email: undefined,
-      github: undefined,
-      twitter: undefined,
-      facebook: undefined,
-      homePage: undefined,
-    },
-    userEmail: "example@example.com",
-    toggle: {
-      commentNotification: true,
-      updateNotification: false,
-    },
-  };
-  const [exampleData, setExampleData] = useState(sampleData);
-  const onVelogTitleChange = useCallback((e) => {
-    const prev = exampleData;
-    prev.velogTitle = e.target.value;
-    setExampleData(prev);
-    console.log("setEnapf");
-  });
-  const onTitleModClick = useCallback((e) => {
+  const fakeState = useRef(true);
+  const fakeState2 = useRef(false);
+  const velogTitle = useSelector((state) => state.settingReducer.velogTitle);
+  const { email, github, twitter, facebook, homePage } = useSelector(
+    (state) => state.settingReducer.socialInfo
+  );
+  const userEmail = useSelector((state) => state.settingReducer.userEmail);
+  const commentNotification = useSelector(
+    (state) => state.settingReducer.commentNotification
+  );
+  const updateNotification = useSelector(
+    (state) => state.settingReducer.updateNotification
+  );
+
+  const onTitleModClick = useCallback(() => {
     setTitleSaved(false);
   });
   const onTitleSumbit = useCallback((e) => {
     e.preventDefault();
+    dispatch(
+      submitTitleSettingRequest({
+        velogTitle: e.target.children[0].value,
+      })
+    );
     setTitleSaved(true);
-    // 서버에 데이터 갱신하는 것 추가 필요.
   });
-  const onAddClick = useCallback((e) => {
+  const onAddClick = useCallback(() => {
     setSocialInfoSaved(false);
   }, []);
   const onSubmit = useCallback((e) => {
     e.preventDefault();
+    dispatch(
+      submitSocialSettingRequest({
+        socialInfo: {
+          email: e.target.children[0].children[0].children[1].value,
+          github: e.target.children[0].children[1].children[1].value,
+          twitter: e.target.children[0].children[2].children[1].value,
+          facebook:
+            e.target.children[0].children[3].children[1].children[1].value,
+          homePage: e.target.children[0].children[4].children[1].value,
+        },
+      })
+    );
     setSocialInfoSaved(true);
     // 서버에 데이터 갱신하는 것 추가 필요.
   }, []);
-  const onCommentToggleClick = useCallback((e) => {
-    // 서버 데이터 갱신
+  const onCommentToggleClick = useCallback(() => {
+    // dispatch(
+    //   submitNotifySettingRequest({
+    //     commentNotification: !commentNotification,
+    //     updateNotification,
+    //   })
+    // );
+    console.log(fakeState);
+    fakeState.current = !fakeState.current;
   }, []);
-  const onUpdateToggleClick = useCallback((e) => {
-    // 서버 데이터 갱신
+  const onUpdateToggleClick = useCallback(() => {
+    // dispatch(
+    //   submitNotifySettingRequest({
+    //     commentNotification,
+    //     updateNotification: !updateNotification,
+    //   })
+    // );
+    console.log(fakeState2);
+    fakeState2.current = !fakeState2.current;
   }, []);
+
+  useEffect(() => {
+    dispatch(loadUserSettingRequest("exampleUser"));
+  }, [dispatch]);
 
   return (
     <S.RestSettingSection>
@@ -63,7 +98,7 @@ const RestSetting = () => {
           <div className="block-for-mobile">
             {titleSaved ? (
               <>
-                <div className="contents">{exampleData.velogTitle}</div>
+                <div className="contents">{velogTitle}</div>
                 <div className="edit-wrapper">
                   <UnderlineButton onClick={onTitleModClick}>
                     수정
@@ -75,8 +110,8 @@ const RestSetting = () => {
                 <S.TitleForm onSubmit={onTitleSumbit}>
                   <S.TitleInput
                     placeholder="벨로그 제목"
-                    value={exampleData.velogTitle}
-                    onChange={onVelogTitleChange}
+                    defaultValue={velogTitle}
+                    // onChange={onVelogTitleChange}
                   />
                   <SquareButton type="submit">저장</SquareButton>
                 </S.TitleForm>
@@ -96,35 +131,36 @@ const RestSetting = () => {
           <div className="block-for-mobile">
             <div className="contents">
               {socialInfoSaved ? (
-                !sampleData.socialInfo.email &&
-                !sampleData.socialInfo.github &&
-                !sampleData.socialInfo.twitter &&
-                !sampleData.socialInfo.facebook &&
-                !sampleData.socialInfo.homePage ? (
+                !email && !github && !twitter && !facebook && !homePage ? (
                   <UnderlineButton onClick={onAddClick}>
                     정보 추가
                   </UnderlineButton>
-                  ) : (
-                    <>
-                      <SocialInfoList socialInfo={sampleData.socialInfo} />
-                    </>
-                  )
+                ) : (
+                  <>
+                    <SocialInfoList
+                      socialInfo={{
+                        email,
+                        github,
+                        twitter,
+                        facebook,
+                        homePage,
+                      }}
+                    />
+                  </>
+                )
               ) : (
                 <SocialInfo
                   onSubmit={onSubmit}
-                  socialInfo={sampleData.socialInfo}
+                  socialInfo={{ email, github, twitter, facebook, homePage }}
                 />
               )}
             </div>
-            {((socialInfoSaved && sampleData.socialInfo.email) ||
-              sampleData.socialInfo.github ||
-              sampleData.socialInfo.twitter ||
-              sampleData.socialInfo.facebook ||
-              sampleData.socialInfo.homePage) && (
-              <div className="edit-wrapper">
-                <UnderlineButton onClick={onAddClick}>수정</UnderlineButton>
-              </div>
-            )}
+            {socialInfoSaved &&
+              (email || github || twitter || facebook || homePage) && (
+                <div className="edit-wrapper">
+                  <UnderlineButton onClick={onAddClick}>수정</UnderlineButton>
+                </div>
+              )}
           </div>
         </div>
         <div className="description">
@@ -137,7 +173,7 @@ const RestSetting = () => {
             <h3>이메일 주소</h3>
           </div>
           <div className="block-for-mobile">
-            <div className="contents">{sampleData.userEmail}</div>
+            <div className="contents">{userEmail}</div>
           </div>
         </div>
         <div className="description">
@@ -154,7 +190,7 @@ const RestSetting = () => {
               <S.SocialInfoUl>
                 <li>
                   <span style={{ width: "14rem" }}>댓글 알림</span>
-                  {sampleData.toggle.commentNotification ? (
+                  {fakeState.current ? (
                     <S.ToggleDiv color="teal" onClick={onCommentToggleClick}>
                       <div
                         className="circle"
@@ -178,7 +214,7 @@ const RestSetting = () => {
                 </li>
                 <li style={{ marginTop: "0.5rem" }}>
                   <span style={{ width: "14rem" }}>벨로그 업데이트 소식</span>
-                  {sampleData.toggle.updateNotification ? (
+                  {fakeState2.current ? (
                     <S.ToggleDiv color="teal" onClick={onUpdateToggleClick}>
                       <div
                         className="circle"

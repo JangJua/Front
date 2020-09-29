@@ -6,6 +6,7 @@ import {
   IoMdHome,
   GrMail,
 } from "react-icons/all";
+import PropTypes from 'prop-types';
 import * as S from "./style";
 
 const SocialInfoList = ({ socialInfo }) => (
@@ -42,5 +43,14 @@ const SocialInfoList = ({ socialInfo }) => (
     )}
   </S.SocialInfoUl>
 );
+SocialInfoList.propTypes = {
+  socialInfo: PropTypes.shape({
+    email: PropTypes.string,
+    github: PropTypes.string,
+    twitter: PropTypes.string,
+    facebook: PropTypes.string,
+    homePage: PropTypes.string,
+  }).isRequired
+};
 
 export default SocialInfoList;

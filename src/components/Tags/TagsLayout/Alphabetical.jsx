@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ALPHABET_TAGS_LOAD_REQUEST } from "store/actions/postAction";
@@ -33,8 +34,8 @@ const Alphabetical = () => {
   return (
     <>
       <S.StyledTagSection>
-        {alphabetTags.map((Tag, index) => (
-          <TagItem Tag={Tag} key={index} />
+        {alphabetTags.map((Tag, id) => (
+          <TagItem Tag={Tag} key={id} />
         ))}
       </S.StyledTagSection>
       {showTagsFallback || <TagsFallBackLayout />}

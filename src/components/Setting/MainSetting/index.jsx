@@ -1,31 +1,56 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { removeThumbnail } from "store/actions/writeAction";
+import { uploadThumbnailRequest } from "store/actions/writeAction";
 import * as S from "./style";
 import SquareButton from "../../Common/SquareButton";
 import UnderlineButton from "../../Common/UnderlineButton";
+import useUpload from "../../../hooks/useUpload";
+import {
+  loadUserSettingRequest,
+  submitMainSettingRequest,
+} from "../../../store/actions/settingAction";
 
 const MainSetting = () => {
+  const dispatch = useDispatch();
+
   const [profileSaved, setProfileSaved] = useState(true);
-  const onModButtonClick = useCallback((e) => {
+  const thumbnail = useSelector((store) => store.write.thumbnail);
+  const [image, setImage] = useUpload();
+  const onModButtonClick = useCallback(() => {
     setProfileSaved(false);
   }, []);
-  const [name, setName] = useState("exampleUser");
-  const [shortBio, setShortBio] = useState("exampleMessage");
-  const onNameChange = useCallback((e) => {
-    setName(e.target.value);
-  }, []);
-  const onBioChange = useCallback((e) => {
-    setShortBio(e.target.value);
-  });
+  const name = useSelector((state) => state.settingReducer.username);
+  const shortBio = useSelector((state) => state.settingReducer.shortBio);
+  const clickRemoveThumbnail = useCallback(() => {
+    dispatch(removeThumbnail());
+  }, [dispatch]);
   const onProfileSubmit = useCallback((e) => {
-    // 서버 데이터 갱신
+    dispatch(
+      submitMainSettingRequest({
+        username: e.target.children[0].value,
+        shortBio: e.target.children[1].value,
+      })
+    );
     setProfileSaved(true);
-  });
+  }, []);
+  useEffect(() => {
+    if (!image) return;
+    dispatch(uploadThumbnailRequest(image));
+  }, [dispatch, image]);
+  useEffect(() => {
+    dispatch(loadUserSettingRequest("exampleUser"));
+  }, [dispatch]);
   return (
     <S.MainSettingSection>
       <div className="thumbnail-area">
-        <img />
-        <SquareButton color="teal">이미지 업로드</SquareButton>
-        <SquareButton color="transparent">이미지 제거</SquareButton>
+        <img src={thumbnail} alt="프로필 사진" />
+        <SquareButton color="teal" onClick={setImage}>
+          이미지 업로드
+        </SquareButton>
+        <SquareButton color="transparent" onClick={clickRemoveThumbnail}>
+          이미지 제거
+        </SquareButton>
       </div>
       {profileSaved ? (
         <div className="info-area">
@@ -41,16 +66,14 @@ const MainSetting = () => {
               className="display-name"
               name="displayName"
               placeholder="이름"
-              value={name}
-              onChange={onNameChange}
+              defaultValue={name}
             />
             <input
               type="text"
               className="shortBio"
               name="shortBio"
               placeholder="한 줄 소개"
-              value={shortBio}
-              onChange={onBioChange}
+              defaultValue={shortBio}
             />
             <div className="button-wrapper">
               <SquareButton type="submit">저장</SquareButton>

@@ -1,5 +1,6 @@
 import React, { memo } from "react";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 import * as S from "./style";
 
 const TagItem = ({ Tag }) => {
@@ -12,5 +13,11 @@ const TagItem = ({ Tag }) => {
       </Link>
     </S.StyledTagItem>
   );
+};
+
+TagItem.propTypes = {
+  Tag: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+  }).isRequired,
 };
 export default memo(TagItem);

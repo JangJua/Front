@@ -1,0 +1,17 @@
+{
+    "username": "exampleUser",
+    "shortBio": "exampleMessage",
+    "velogTitle": "example.log",
+    "socialInfo": {
+      "email": "example@example.com",
+      "github": "shw1606",
+      "twitter": "twitter",
+      "facebook": "facebook",
+      "homePage": "homePage.com"
+    },
+    "userEmail": "example@example.com",
+    "toggle": {
+      "commentNotification": true,
+      "updateNotification": false
+    }
+}

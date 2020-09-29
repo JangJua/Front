@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
+import PropTypes from 'prop-types';
 import * as S from "./style";
 
 const TagItem = ({ Tag }) => {
@@ -16,6 +17,14 @@ const TagItem = ({ Tag }) => {
       </div>
     </S.TagItemWrapper>
   );
+};
+
+TagItem.propTypes = {
+  Tag: PropTypes.shape({
+    name: PropTypes.string,
+    description: PropTypes.string,
+    count: PropTypes.number,
+  }).isRequired
 };
 
 export default TagItem;

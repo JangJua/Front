@@ -2,12 +2,12 @@ import React, { lazy, Suspense, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
+import { LOAD_USER_POSTS_REQUEST } from "store/actions/userAction";
+import { useInfiniteScroll } from "hooks";
 
 // action
-import { LOAD_USER_POSTS_REQUEST } from "store/actions/userAction";
 
 // custom hooks
-import { useInfiniteScroll } from "hooks";
 
 // component
 import UserPostListFallBack from "../UserPostListFallBack";
